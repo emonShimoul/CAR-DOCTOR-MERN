@@ -38,13 +38,23 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const options = {
-        projection: { price: 1, service_id: 1, title: 1 },
+        projection: { price: 1, service_id: 1, title: 1, img: 1 },
       };
       const result = await serviceCollection.findOne(query, options);
       res.send(result);
     });
 
     // bookings
+    app.get("/bookings", async (req, res) => {
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.post("/bookings", async (req, res) => {
       const booking = req.body;
       console.log(booking);
